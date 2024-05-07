@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     const reqBody = await request.json();
     const { email, password } = reqBody;
     const user: any = await User.findOne({ email });
-
+    
     if (!user) {
       return NextResponse.json(
         {
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
         expiresIn: "24h",
       }
     );
-
+ 
     console.log("JWT: ", token);
 
     return NextResponse.json(
