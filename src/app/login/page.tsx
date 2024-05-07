@@ -18,15 +18,14 @@ const LoginPage = () => {
     try {
       setLoading(true);
       const response = await axios.post("/api/users/login", user);
-      console.log("login Success", response.data);
-      const token = response.data.token;
-      localStorage.setItem("token", token);
-      toast.success(response.data.message);
+      console.log("Login success", response.data);
+      toast.success("Login success");
+      router.push("/profile");
+    } catch (error: any) {
+      console.log("Login failed", error.message);
+      toast.error(error.message);
+    } finally {
       setLoading(false);
-      router.push('/profile')
-    } catch (error) {
-      console.log(error);
-      toast.error("Error During Login");
     }
   };
 

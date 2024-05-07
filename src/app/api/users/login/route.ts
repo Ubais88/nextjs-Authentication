@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     const reqBody = await request.json();
     const { email, password } = reqBody;
     const user: any = await User.findOne({ email });
-    
+
     if (!user) {
       return NextResponse.json(
         {
@@ -44,18 +44,16 @@ export async function POST(request: NextRequest) {
         expiresIn: "24h",
       }
     );
- 
-    console.log("JWT: ", token);
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "User Login successfully",
-        token
-      },
-      { status: 200 }
-    );
-
+    const response = NextResponse.json({
+      message: "Login successful",
+      success: true,
+      token,
+    });
+    response.cookies.set("token", token, {
+      httpOnly: true,
+    });
+    return response;
   } catch (error: any) {
     console.log("error", error);
     return NextResponse.json(

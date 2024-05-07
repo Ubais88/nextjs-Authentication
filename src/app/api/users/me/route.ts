@@ -7,8 +7,9 @@ connect();
 
 export async function GET(request: NextRequest) {
   try {
-    // Extract token from request headers
-    const token = request.headers.get("Authorization")?.split(" ")[1];
+    const token = request.cookies.get("token")?.value || '';
+    const decodedToken:any = jwt.verify(token, process.env.JWT_SECRET!);
+
     console.log("Token: ", token);
     if (!token) {
       return NextResponse.json(
@@ -20,11 +21,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Verify token
-    // const decodedToken:any = jwt.verify(token, process.env.JWT_SECRET!);
-    const decodedToken: any = jwt.verify(token, process.env.JWT_SECRET!);
-
-    const userId = decodedToken.id;
+    const userId = decodedToken.id;;
 
     const userDetails = await User.findOne({ _id: userId });
 
