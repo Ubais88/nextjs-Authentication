@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
   try {
     const reqBody = await request.json();
     const { email, password } = reqBody;
-    const user: any = User.findOne({ email });
+    const user: any = await User.findOne({ email });
 
     if (!user) {
       return NextResponse.json(
@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
       {
         success: true,
         message: "User Login successfully",
+        token
       },
       { status: 200 }
     );

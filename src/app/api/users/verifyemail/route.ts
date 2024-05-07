@@ -9,7 +9,15 @@ export async function POST(request: NextRequest) {
     const reqBody = await request.json();
     const { token } = reqBody;
     console.log("token : ", token);
-
+    if (!token) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Authorization token is missing",
+        },
+        { status: 401 }
+      );
+    }
     const user = await User.findOne({
       verifyToken: token,
       verifyTokenExpiry: { $gte: Date.now() },
