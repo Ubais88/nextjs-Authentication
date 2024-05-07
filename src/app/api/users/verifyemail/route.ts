@@ -9,6 +9,7 @@ export async function POST(request: NextRequest) {
     const reqBody = await request.json();
     const { token } = reqBody;
     console.log("token : ", token);
+    
     if (!token) {
       return NextResponse.json(
         {
@@ -18,10 +19,13 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       );
     }
+
     const user = await User.findOne({
       verifyToken: token,
       verifyTokenExpiry: { $gte: Date.now() },
     });
+
+
     if (!user) {
       return NextResponse.json(
         {
@@ -31,13 +35,14 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+    console.log("User fetched Successfully: ", user)
 
     user.isVerified = true;
     user.verifyToken = undefined;
     user.verifyTokenExpiry = undefined;
 
     await user.save();
-
+    console.log("User Verified Successfully: ", user)
     return NextResponse.json(
       {
         success: true,
